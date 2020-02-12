@@ -89,14 +89,13 @@ def PytestTests( parsed_args, extra_pytests_args ):
 
 
 def RunPytestsFromFile():
-    pytest_args = []
-    pytest_args.append('-x')
+    total_files = []
     with open("ycm_tc.txt") as f:
         for line in f:
-            pytest_args.append(str(line.replace("\n", "")))
-    pytest_args.append('-p')
-    pytest_args.append('py_call_graph')
-    subprocess.check_call([sys.executable, '-m', 'pytest'] + pytest_args)
+            total_files.append(str(line.replace("\n", "")))
+    for test_file in total_files:
+        pytest_args = ['-x', test_file, '-p', 'py_call_graph']
+        subprocess.check_call([sys.executable, '-m', 'pytest'] + pytest_args)
 
 
 def Main():
