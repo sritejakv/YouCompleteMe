@@ -56,3 +56,8 @@ doc/tags
 .coverage
 .coverage.*
 coverage.xml
+
+.idea/
+venv/
+dotFiles/
+*.png

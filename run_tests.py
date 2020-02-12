@@ -55,6 +55,8 @@ def ParseArguments():
   parser.add_argument( '--dump-path', action = 'store_true',
                        help = 'Dump the PYTHONPATH required to run tests '
                               'manually, then exit.' )
+  parser.add_argument('--fromFile', action='store_true',
+                      help='Take test cases from a file youcompleteme_tc.txt')
 
   parsed_args, pytests_args = parser.parse_known_args()
 
@@ -86,6 +88,17 @@ def PytestTests( parsed_args, extra_pytests_args ):
   subprocess.check_call( [ sys.executable, '-m', 'pytest' ] + pytests_args )
 
 
+def RunPytestsFromFile():
+    pytest_args = []
+    pytest_args.append('-x')
+    with open("ycm_tc.txt") as f:
+        for line in f:
+            pytest_args.append(str(line.replace("\n", "")))
+    pytest_args.append('-p')
+    pytest_args.append('py_call_graph')
+    subprocess.check_call([sys.executable, '-m', 'pytest'] + pytest_args)
+
+
 def Main():
   ( parsed_args, pytests_args ) = ParseArguments()
   if parsed_args.dump_path:
@@ -96,7 +109,10 @@ def Main():
     RunFlake8()
 
   BuildYcmdLibs( parsed_args )
-  PytestTests( parsed_args, pytests_args )
+  if parsed_args.fromFile:
+    RunPytestsFromFile()
+  else:
+    PytestTests( parsed_args, pytests_args )
 
 
 if __name__ == "__main__":
