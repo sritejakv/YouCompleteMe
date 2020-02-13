@@ -94,8 +94,11 @@ def RunPytestsFromFile():
         for line in f:
             total_files.append(str(line.replace("\n", "")))
     for test_file in total_files:
-        pytest_args = ['-x', test_file, '-p', 'py_call_graph']
-        subprocess.check_call([sys.executable, '-m', 'pytest'] + pytest_args)
+        try:
+            pytest_args = ['-x', test_file, '-p', 'py_call_graph']
+            subprocess.check_call([sys.executable, '-m', 'pytest'] + pytest_args)
+        except Exception as e:
+            continue
 
 
 def Main():
